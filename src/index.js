@@ -66,7 +66,10 @@ app.post("/sign-up", async (req, res) => {
   }
 });
 
-
+const postSchema = joi.object({
+  value: joi.number().required(),
+  description: joi.string().required()
+})
 
 app.post("/sign-in", async (req, res) => {
   const loginSchema = joi.object({
@@ -122,7 +125,8 @@ app.get("/sign-in", async (req, res) => {
   }
 });
 
-app.get("/posts", async (req, res) => {
+//Trocar nome da coleção de posts para finances
+app.get("/finances", async (req, res) => {
   const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
 
@@ -137,15 +141,10 @@ app.get("/posts", async (req, res) => {
   res.send(posts);
 });
 
-app.post("/posts", async (req,res) => {
+app.post("/finances", async (req,res) => {
   const post = req.body;
   const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
-  
-  const postSchema = joi.object({
-    value: joi.number().required(),
-    description: joi.string().required()
-  })
 
   const { error } = postSchema.validate(post);
 
@@ -161,6 +160,57 @@ app.post("/posts", async (req,res) => {
 
   await db.collection('posts').insertOne({ ...post, userId: session.userId })
   res.sendStatus(201);
+});
+
+app.delete("/finances/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const value = await db
+    .collection("posts")
+    .findOne({ _id: new ObjectId(id) });
+
+  if (!value) {
+    res.sendStatus(422);
+  }
+
+  try {
+    await db.collection("posts").deleteOne({ _id: new ObjectId(id) });
+
+    res.sendStatus(201);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+app.put("/finances/:id", async (req, res) => {
+  const id = req.params.id;
+  const value = req.body;
+
+  const { error } = postSchema.validate(value, { abortEarly: true });
+
+  if (error) {
+    res.sendStatus(422);
+    return;
+  }
+
+  try {
+    const value = await db
+      .collection("posts")
+      .findOne({ _id: new ObjectId(id) });
+    if (!value) {
+      return res.sendStatus(404);
+    }
+
+    await db
+      .collection("posts")
+      .updateOne({ _id: value._id }, { $set: req.body });
+
+    res.send(value);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 });
 
 const PORT = process.env.PORT || 5001;
