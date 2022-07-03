@@ -1,27 +1,17 @@
 import express from "express";
 import cors from "cors";
-
-import { createFinance, deleteFinance, getFinance, updateFinance } from "./controllers/financeController.js";
-import { getUser, signIn, signUp } from "./controllers/authController.js";
-
 import dotenv from "dotenv";
+import authRouter from "./routes/authRouter.js";
+import financeRouter from "./routes/financeRouter.js";
+import validateUser from './middlewares/validateUser.js';
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-
-app.post("/sign-up", signUp);
-app.post("/sign-in", signIn);
-
-app.get("/sign-in", getUser);
-
-//Finances
-app.get("/finances", getFinance);
-app.post("/finances", createFinance);
-app.delete("/finances/:id", deleteFinance);
-app.put("/finances/:id", updateFinance);
+app.use(authRouter);
+app.use(validateUser, financeRouter);
 
 const PORT = process.env.PORT || 5001;
 

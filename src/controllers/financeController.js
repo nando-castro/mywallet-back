@@ -14,20 +14,12 @@ mongoClient.connect(() => {
 });
 
 const financeSchema = joi.object({
-    value: joi.number().required(),
-    description: joi.string().required()
-  });  
+  value: joi.number().required(),
+  description: joi.string().required(),
+  type: joi.string().valid("add", "remove"),
+});
 
 export async function getFinance(req, res) {
-  const { authorization } = req.headers;
-  const token = authorization?.replace("Bearer ", "");
-
-  const session = await db.collection("sessions").findOne({ token });
-
-  if (!session) {
-    return res.sendStatus(401);
-  }
-
   const finances = await db
     .collection("finances")
     .find({ userId: new ObjectId(session.userId) })
@@ -55,7 +47,12 @@ export async function createFinance(req, res) {
 
   await db
     .collection("finances")
-    .insertOne({ ...finance, type: "", time: dayjs().format("HH:mm:ss"), userId: session.userId });
+    .insertOne({
+      ...finance,
+      type: "",
+      time: dayjs().format(),
+      userId: session.userId,
+    });
   res.sendStatus(201);
 }
 

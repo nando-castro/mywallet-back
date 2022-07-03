@@ -104,10 +104,10 @@ export async function signIn(req, res) {
 
       await db.collection("sessions").insertOne({
         token: token,
-        userId: new ObjectId(user._id),
+        userId: new ObjectId(user._id)
       });
 
-      return res.status(200).send({ token });
+      return res.status(200).send({ token, email: user.email });
     } else {
       return res.status(401).send("Senha ou email incorretos!");
     }
