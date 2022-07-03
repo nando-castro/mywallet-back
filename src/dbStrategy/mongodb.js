@@ -10,4 +10,6 @@ mongoClient.connect(() => {
   db = mongoClient.db(process.env.MONGO_DATABASE_NAME);
 });
 
-export default db;
+const objectId = ObjectId;
+
+export { db, objectId };

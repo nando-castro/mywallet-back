@@ -1,7 +1,7 @@
 import joi from "joi";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
-import db from '../dbStrategy/mongodb.js'
+import {db, objectId} from '../dbStrategy/mongodb.js'
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ export async function getFinance(req, res) {
 
   const finances = await db
     .collection("finances")
-    .find({ userId: new ObjectId(session.userId) })
+    .find({ userId: new objectId(session.userId) })
     .toArray();
 
   res.send(finances);
@@ -55,19 +55,19 @@ export async function deleteFinance(req, res) {
 
   const value = await db
     .collection("finances")
-    .findOne({ _id: new ObjectId(id) });
+    .findOne({ _id: new objectId(id) });
 
   if (!value) {
     res.sendStatus(422);
   }
 
   try {
-    await db.collection("finances").deleteOne({ _id: new ObjectId(id) });
+    await db.collection("finances").deleteOne({ _id: new objectId(id) });
 
     res.sendStatus(201);
   } catch (error) {
     console.error(error);
-    res.sendStatus(500);
+    res.status(500).send("o erro foi aqui");
   }
 }
 
@@ -85,7 +85,7 @@ export async function updateFinance(req, res) {
   try {
     const value = await db
       .collection("finances")
-      .findOne({ _id: new ObjectId(id) });
+      .findOne({ _id: new objectId(id) });
     if (!value) {
       return res.sendStatus(404);
     }
@@ -97,6 +97,6 @@ export async function updateFinance(req, res) {
     res.send(value);
   } catch (error) {
     console.error(error);
-    res.sendStatus(500);
+    res.status(500).send("erro aqui");
   }
 }
