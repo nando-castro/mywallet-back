@@ -3,17 +3,9 @@ import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
-
-import { MongoClient, ObjectId } from "mongodb";
+import db from '../dbStrategy/mongodb.js'
 
 dotenv.config();
-
-const mongoClient = new MongoClient(process.env.MONGO_URI);
-let db;
-
-mongoClient.connect(() => {
-  db = mongoClient.db(process.env.MONGO_DATABASE_NAME);
-});
 
 export async function signUp(req, res) {
   const registerSchema = joi.object({

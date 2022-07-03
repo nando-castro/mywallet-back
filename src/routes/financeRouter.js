@@ -1,4 +1,4 @@
-import { createFinance, deleteFinance, getFinance, updateFinance } from "../controllers/financeController";
+import { createFinance, deleteFinance, getFinance, updateFinance } from "../controllers/financeController.js";
 import { Router } from 'express';
 
 const router = Router();

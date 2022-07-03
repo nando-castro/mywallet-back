@@ -1,4 +1,4 @@
-import { db } from '../dbStrategy/mongodb';
+import db from '../dbStrategy/mongodb.js';
 
 async function validateUser(req, res, next) {
   const { authorization } = req.headers;

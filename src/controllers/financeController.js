@@ -1,17 +1,9 @@
 import joi from "joi";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
-
-import { MongoClient, ObjectId } from "mongodb";
+import db from '../dbStrategy/mongodb.js'
 
 dotenv.config();
-
-const mongoClient = new MongoClient(process.env.MONGO_URI);
-let db;
-
-mongoClient.connect(() => {
-  db = mongoClient.db(process.env.MONGO_DATABASE_NAME);
-});
 
 const financeSchema = joi.object({
   value: joi.number().required(),
@@ -20,6 +12,8 @@ const financeSchema = joi.object({
 });
 
 export async function getFinance(req, res) {
+  const session = res.locals.session;
+
   const finances = await db
     .collection("finances")
     .find({ userId: new ObjectId(session.userId) })
