@@ -8,7 +8,7 @@ dotenv.config();
 const financeSchema = joi.object({
   value: joi.number().required(),
   description: joi.string().required(),
-  type: joi.string().valid("add", "remove"),
+  type: joi.string().valid("add", "exit"),
 });
 
 export async function getFinance(req, res) {
@@ -44,7 +44,7 @@ export async function createFinance(req, res) {
     .insertOne({
       ...finance,
       type: "",
-      time: dayjs().format(),
+      time: dayjs().format('DD-MM'),
       userId: session.userId,
     });
   res.sendStatus(201);

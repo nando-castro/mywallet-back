@@ -46,6 +46,7 @@ export async function signUp(req, res) {
       name: user.name,
       email: user.email,
       password: passCrypt,
+      saldo: 0
     });
 
     res.sendStatus(201);
@@ -96,10 +97,10 @@ export async function signIn(req, res) {
 
       await db.collection("sessions").insertOne({
         token: token,
-        userId: new objectId(user._id)
+        userId: objectId(user._id)
       });
 
-      return res.status(200).send({ token });
+      return res.status(200).send({ token, email: user.email });
     } else {
       return res.status(401).send("Senha ou email incorretos!");
     }
