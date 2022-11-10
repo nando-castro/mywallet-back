@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
-import {db, objectId} from '../dbStrategy/mongodb.js'
+import { db, objectId } from "../dbStrategy/mongodb.js";
 
 dotenv.config();
 
@@ -46,7 +46,7 @@ export async function signUp(req, res) {
       name: user.name,
       email: user.email,
       password: passCrypt,
-      saldo: 0
+      saldo: 0,
     });
 
     res.sendStatus(201);
@@ -97,15 +97,17 @@ export async function signIn(req, res) {
 
       await db.collection("sessions").insertOne({
         token: token,
-        userId: objectId(user._id)
+        userId: objectId(user._id),
       });
 
-      return res.status(200).send({ token, email: user.email });
+      return res
+        .status(200)
+        .send({ token, email: user.email, name: emailExists.name });
     } else {
       return res.status(401).send("Senha ou email incorretos!");
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).send("erro");
   }
 }
