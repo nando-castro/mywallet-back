@@ -1,7 +1,7 @@
 import joi from "joi";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
-import {db, objectId} from '../dbStrategy/mongodb.js'
+import { db, objectId } from "../dbStrategy/mongodb.js";
 
 dotenv.config();
 
@@ -16,8 +16,10 @@ export async function getFinance(req, res) {
 
   const finances = await db
     .collection("finances")
-    .find({ userId: new objectId(session.userId) })
+    .find({ userId: session.userId })
     .toArray();
+
+  console.log(finances);
 
   res.send(finances);
 }
@@ -39,14 +41,12 @@ export async function createFinance(req, res) {
     return res.sendStatus(401);
   }
 
-  await db
-    .collection("finances")
-    .insertOne({
-      ...finance,
-      type: "",
-      time: dayjs().format('DD-MM'),
-      userId: session.userId,
-    });
+  await db.collection("finances").insertOne({
+    ...finance,
+    type: "",
+    time: dayjs().format("DD/MM"),
+    userId: objectId(session.userId),
+  });
   res.sendStatus(201);
 }
 

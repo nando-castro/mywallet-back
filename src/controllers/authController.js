@@ -95,10 +95,25 @@ export async function signIn(req, res) {
     if (emailExists && comparePassword) {
       const token = uuid();
 
-      await db.collection("sessions").insertOne({
-        token: token,
-        userId: objectId(user._id),
-      });
+      const session = await db
+        .collection("sessions")
+        .findOne({ userId: objectId(emailExists._id) });
+
+      if (session !== null) {
+        await db
+          .collection("sessions")
+          .deleteOne({ userId: objectId(emailExists._id) });
+
+        await db.collection("sessions").insertOne({
+          token: token,
+          userId: objectId(emailExists._id),
+        });
+      } else {
+        await db.collection("sessions").insertOne({
+          token: token,
+          userId: objectId(emailExists._id),
+        });
+      }
 
       return res
         .status(200)
