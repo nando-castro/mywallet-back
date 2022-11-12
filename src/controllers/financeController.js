@@ -19,8 +19,6 @@ export async function getFinance(req, res) {
     .find({ userId: session.userId })
     .toArray();
 
-  console.log(finances);
-
   res.send(finances);
 }
 

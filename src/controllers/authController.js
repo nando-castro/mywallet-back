@@ -55,15 +55,6 @@ export async function signUp(req, res) {
   }
 }
 
-export async function getUser(req, res) {
-  try {
-    const users = await db.collection("users").find().toArray();
-    res.status(200).send(users);
-  } catch (error) {
-    res.sendStatus(500);
-  }
-}
-
 export async function signIn(req, res) {
   const loginSchema = joi.object({
     email: joi.string().email().required(),
