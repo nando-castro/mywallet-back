@@ -54,7 +54,7 @@ export async function deleteFinance(req, res) {
   const value = await db
     .collection("finances")
     .findOne({ _id: new objectId(id), userId: session.userId });
-  
+
   if (value === null) {
     return res.sendStatus(401);
   }
@@ -65,7 +65,7 @@ export async function deleteFinance(req, res) {
     res.sendStatus(200);
   } catch (error) {
     console.error(error);
-    res.status(500).send("o erro foi aqui");
+    res.sendStatus(500);
   }
 }
 
@@ -95,6 +95,6 @@ export async function updateFinance(req, res) {
     res.sendStatus(200);
   } catch (error) {
     console.error(error);
-    res.status(500).send("erro aqui");
+    res.sendStatus(500);
   }
 }
