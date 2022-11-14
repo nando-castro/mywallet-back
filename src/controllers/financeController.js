@@ -49,19 +49,20 @@ export async function createFinance(req, res) {
 
 export async function deleteFinance(req, res) {
   const id = req.params.id;
+  const session = res.locals.session;
 
   const value = await db
     .collection("finances")
-    .findOne({ _id: new objectId(id) });
-
-  if (!value) {
-    res.sendStatus(422);
+    .findOne({ _id: new objectId(id), userId: session.userId });
+  
+  if (value === null) {
+    return res.sendStatus(401);
   }
 
   try {
     await db.collection("finances").deleteOne({ _id: new objectId(id) });
 
-    res.sendStatus(201);
+    res.sendStatus(200);
   } catch (error) {
     console.error(error);
     res.status(500).send("o erro foi aqui");
@@ -91,7 +92,7 @@ export async function updateFinance(req, res) {
       .collection("finances")
       .updateOne({ _id: value._id }, { $set: req.body });
 
-    res.send(value);
+    res.sendStatus(200);
   } catch (error) {
     console.error(error);
     res.status(500).send("erro aqui");

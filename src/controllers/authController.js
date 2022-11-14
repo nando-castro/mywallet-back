@@ -12,7 +12,7 @@ export async function signUp(req, res) {
     name: joi.string().required(),
     email: joi.string().email().required(),
     password: joi.string().required(),
-    passconfirm: joi.string().required(),
+    passwordConfirm: joi.string().required(),
   });
 
   const user = req.body;
@@ -23,7 +23,7 @@ export async function signUp(req, res) {
     return res.sendStatus(422);
   }
 
-  if (user.password !== user.passconfirm) {
+  if (user.password !== user.passwordConfirm) {
     return res.status(401).send("Senhas devem ser iguais");
   }
 
