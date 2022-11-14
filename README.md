@@ -39,6 +39,7 @@ POST /sign-up
 | Status Code |      Description      |          Properties           |
 | :---------: | :-------------------: | :---------------------------: |
 |   **201**   |          Created           |          CREATED           |
+   **409**   |     Conflict     | `error: { message }` |
 |   **422**   |     Unprocessable Entity     | `error: { message }` |
 |   **500**   | Internal Server Error | `error: { message }` |
 ### Login User
@@ -69,7 +70,7 @@ POST /sign-in
 |   **500**   | Internal Server Error | `error: { message }` |
 
 ​
-### Get Finances
+### Finances
 ```http
 GET /finances
 ```
@@ -93,15 +94,108 @@ GET /finances
  }
 ]
 ```
+
+| Status Code |      Description      |          Properties           |
+| :---------: | :-------------------: | :---------------------------: |
+|   **200**   |          OK           |          OK           |
+|   **401**   |       Unauthorized      | `error: { message }` |
+|   **404**   |       Not Found       | `error: { message }` |
+|   **422**   |     Unprocessable Entity     | `error: { message }` |
+|   **500**   | Internal Server Error | `error: { message }` |
+
+
+```http
+POST /finances
+```
+
+##### &nbsp; ‣ &nbsp; Headers
+```json
+{
+  "Authorization": "token",
+}
+```
+
+#### Require:
+```json
+ {
+   "value": number (required)
+   "descripition": string (required)
+   "type": string (required)
+ }
+```
+
+| Status Code |      Description      |          Properties           |
+| :---------: | :-------------------: | :---------------------------: |
+|   **201**   |          Created           |          CREATED           |
+|   **401**   |       Unauthorized      | `error: { message }` |
+|   **404**   |       Not Found       | `error: { message }` |
+|   **422**   |     Unprocessable Entity     | `error: { message }` |
+|   **500**   | Internal Server Error | `error: { message }` |
+
+
+```http
+PUT /finances/:id
+```
+
+##### &nbsp; ‣ &nbsp; Headers
+```json
+{
+  "Authorization": "token",
+}
+```
+
+#### Require:
+```json
+ {
+   "value": number
+   "descripition": string
+   "type": string
+ }
+```
+
+| Status Code |      Description      |          Properties           |
+| :---------: | :-------------------: | :---------------------------: |
+|   **200**   |          OK           |          OK           |
+|   **401**   |       Unauthorized      | `error: { message }` |
+|   **404**   |       Not Found       | `error: { message }` |
+|   **422**   |     Unprocessable Entity     | `error: { message }` |
+|   **500**   | Internal Server Error | `error: { message }` |
+
+
+```http
+DELETE /finances/:id
+```
+
+##### &nbsp; ‣ &nbsp; Headers
+```json
+{
+  "Authorization": "token",
+}
+```
+
+| Status Code |      Description      |          Properties           |
+| :---------: | :-------------------: | :---------------------------: |
+|   **200**   |          OK           |          OK           |
+|   **401**   |       Unauthorized      | `error: { message }` |
+|   **404**   |       Not Found       | `error: { message }` |
+|   **422**   |     Unprocessable Entity     | `error: { message }` |
+|   **500**   | Internal Server Error | `error: { message }` |
+
 ​
 ## Environment Variables
 ​
 To run this project, you will need to add the following environment variables to your .env file
 ​
-`DATABASE_URL = postgres://UserName:Password@Hostname:5432/DatabaseName`
+
+`MONGO_URI=mongodb://localhost:27017`
 ​
+
+`MONGO_DATABASE_NAME=name database`
+​
+
 `PORT = number #recommended:5000`
 ​
+
 `SECRET_KEY = any string`
 ​
 ## Run Locally
@@ -109,13 +203,13 @@ To run this project, you will need to add the following environment variables to
 Clone the project
 ​
 ```bash
-  git clone https://github.com/user/projeto18-valex
+  git clone https://github.com/user/mywallet-back
 ```
 ​
 Go to the project directory
 ​
 ```bash
-  cd projeto18-valex/
+  cd mywallet-back/
 ```
 ​
 Install dependencies
@@ -139,6 +233,6 @@ Create database
 Start the server
 ​
 ```bash
-  npm run start
+  npm start
 ```
 ​
