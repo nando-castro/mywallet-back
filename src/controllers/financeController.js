@@ -17,6 +17,7 @@ export async function getFinance(req, res) {
   const finances = await db
     .collection("finances")
     .find({ userId: session.userId })
+    .sort({ date: -1 })
     .toArray();
 
   res.send(finances);
@@ -42,6 +43,7 @@ export async function createFinance(req, res) {
   await db.collection("finances").insertOne({
     ...finance,
     time: dayjs().format("DD/MM"),
+    date: new Date(),
     userId: objectId(session.userId),
   });
   res.sendStatus(201);
