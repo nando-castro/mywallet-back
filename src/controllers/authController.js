@@ -113,7 +113,6 @@ export async function signIn(req, res) {
       return res.status(401).send("Senha ou email incorretos!");
     }
   } catch (error) {
-    console.log(error);
     res.status(500).send("erro");
   }
 }
