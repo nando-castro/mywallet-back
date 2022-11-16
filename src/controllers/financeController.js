@@ -43,7 +43,7 @@ export async function createFinance(req, res) {
   await db.collection("finances").insertOne({
     ...finance,
     time: dayjs().format("DD/MM"),
-    date: new Date(),
+    createdAt: new Date(),
     userId: objectId(session.userId),
   });
   res.sendStatus(201);
